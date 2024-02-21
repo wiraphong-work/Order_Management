@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { MainPage } from '../component/global-fuction';
 import data from './data.json'
 
-test.beforeEach('test login' , async({page})=>{
+test.beforeEach('test Order' , async({page})=>{
     const component = new MainPage(page);
     await component.loginPage()
   })
@@ -16,7 +16,7 @@ test('Test_10', async ({ page }) => {
     await page.fill('[id="postal-code"]', '10400')
     await page.click('[id="continue"]')
     await page.click('[id="finish"]')
-    await expect(page.getByText(data["sucess"])).toBeVisible()
+    await expect(page.getByText(data['order_sucess'])).toBeVisible()
 });
 
 test('Test_11', async ({ page }) => {
