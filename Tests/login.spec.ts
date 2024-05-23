@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import data from './data.json';
 import { MainPage } from '../component/global-fuction';
 
+//Test git action
 test.beforeEach('test Login', async ({ page }) => {
   await page.goto('/');
 });
