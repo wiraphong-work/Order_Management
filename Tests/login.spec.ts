@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import data from './data.json';
 import { MainPage } from '../component/global-fuction';
 
-//Test git action
+//Test git action failed
 test.beforeEach('test Login', async ({ page }) => {
   await page.goto('/');
 });
 
 test('Test_01', async ({ page }) => {
-  await page.getByPlaceholder('Username').fill(String(process.env.USERLOGIN));
+  await page.getByPlaceholder('Username123').fill(String(process.env.USERLOGIN));
   await page
     .getByPlaceholder('Password')
     .fill(String(process.env.PASSWORDLOGIN));
