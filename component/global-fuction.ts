@@ -1,18 +1,14 @@
 import { test, expect, Page } from '@playwright/test';
-import data from "../Tests/data.json"
-
+import data from '../Tests/data.json';
 
 export class MainPage {
-    constructor(private readonly page: Page) { }
+  constructor(private readonly page: Page) {}
 
-    async loginPage() {
-        await this.page.goto('/');
-        await this.page.fill('[id="user-name"]' , String(process.env.USERLOGIN))
-        await this.page.fill('[id="password"]' , String(process.env.PASSWORDLOGIN))
-        await this.page.click('[id="login-button"]')
-        await expect(this.page.getByText(data["name_website"])).toBeVisible()
-      }
-
-
-     
-}  
+  async loginPage() {
+    await this.page.goto('/');
+    await this.page.getByPlaceholder('Username').fill(String(process.env.USERLOGIN))
+    await this.page.getByPlaceholder('Password').fill(String(process.env.PASSWORDLOGIN))
+    await this.page.getByRole('button', { name: 'Login' }).click();
+    await expect(this.page.getByText(data['name_website'])).toBeVisible();
+  }
+}

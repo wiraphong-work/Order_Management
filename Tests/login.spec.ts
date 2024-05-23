@@ -1,32 +1,31 @@
 import { test, expect } from '@playwright/test';
-import data from './data.json'
+import data from './data.json';
+import { MainPage } from '../component/global-fuction';
 
-test.beforeEach('test login' , async({page})=>{
-  //Case not use component fuction.
+test.beforeEach('test Login', async ({ page }) => {
   await page.goto('/');
-})
+});
 
 test('Test_01', async ({ page }) => {
-  await page.fill('[id="user-name"]' , String(process.env.USERLOGIN))
-  await page.fill('[id="password"]' , String(process.env.PASSWORDLOGIN))
-  await page.click('[id="login-button"]')
-  await expect(page.getByText(data['name_website'])).toBeVisible()
+  await page.getByPlaceholder('Username').fill(String(process.env.USERLOGIN));
+  await page
+    .getByPlaceholder('Password')
+    .fill(String(process.env.PASSWORDLOGIN));
+  await page.getByRole('button', { name: 'Login' }).click();
+  await expect(page.getByText(data['name_website'])).toBeVisible();
 });
 
 test('Test_02', async ({ page }) => {
-  await page.fill('[id="user-name"]' , 'test')
-  await page.fill('[id="password"]' , 'test')
-  await page.click('[id="login-button"]')
-  await expect(page.getByText(data['error'])).toBeVisible()
+  await page.getByPlaceholder('Username').fill('test');
+  await page.getByPlaceholder('Password').fill('test');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await expect(page.getByText(data['error'])).toBeVisible();
 });
 
 test('Test_03', async ({ page }) => {
-  await page.fill('[id="user-name"]' , String(process.env.USERLOGIN))
-  await page.fill('[id="password"]' , String(process.env.PASSWORDLOGIN))
-  await page.click('[id="login-button"]')
-  await expect(page.getByText(data['name_website'])).toBeVisible()
-  await page.click('[id="react-burger-menu-btn"]')
-  await page.click('[id="logout_sidebar_link"]')
-  await expect(page.getByText(data['name_website'])).toBeVisible()
+  const component = new MainPage(page);
+  await component.loginPage();
+  await page.click('[id="react-burger-menu-btn"]');
+  await page.click('[id="logout_sidebar_link"]');
+  await expect(page.getByText(data['name_website'])).toBeVisible();
 });
-

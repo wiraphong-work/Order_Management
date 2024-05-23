@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 import { MainPage } from "../component/global-fuction";
 
 test.beforeEach("test Product", async ({ page }) => {
-  //Case use component fuction.
   const component = new MainPage(page);
   await component.loginPage();
 });
