@@ -8,7 +8,7 @@ test.beforeEach('test Login', async ({ page }) => {
 });
 
 test('Test_01', async ({ page }) => {
-  await page.getByPlaceholder('Username123').fill(String(process.env.USERLOGIN));
+  await page.getByPlaceholder('Username').fill(String(process.env.USERLOGIN));
   await page
     .getByPlaceholder('Password')
     .fill(String(process.env.PASSWORDLOGIN));
