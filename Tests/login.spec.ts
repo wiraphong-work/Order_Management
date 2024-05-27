@@ -26,7 +26,7 @@ test('Test_02', async ({ page }) => {
 test('Test_03', async ({ page }) => {
   const component = new MainPage(page);
   await component.loginPage();
-  await page.click('[id="react-burger-menu-btn"]');
-  await page.click('[id="logout_sidebar_link"]');
+  await page.click('id=react-burger-menu-btn');
+  await page.click('id=logout_sidebar_link');
   await expect(page.getByText(data['name_website'])).toBeVisible();
 });
