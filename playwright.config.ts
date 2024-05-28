@@ -17,7 +17,15 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    [
+      'playwright-tesults-reporter',
+      {
+        'tesults-target':
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImRhNjY3YzM4LWJhYmEtNGNjNC1iOGUyLTBhYzNjY2JjOWQ1ZC0xNzE2ODgwNTg0NzU2IiwiZXhwIjo0MTAyNDQ0ODAwMDAwLCJ2ZXIiOiIwIiwic2VzIjoiMzU2ODE1ZjUtZjIzZS00MzE5LWFiMDAtMjEzMjdhOWM0MjJkIiwidHlwZSI6InQifQ.lhnRwIOSUacwvP0Yjf9m38GuubtIl1G6aKZPWQHCBUI',
+      },
+    ],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -31,9 +39,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'],
-      screenshot : 'on',
-    },   
+      use: { ...devices['Desktop Chrome'], screenshot: 'on' },
     },
 
     {
@@ -44,6 +50,6 @@ export default defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-    }
-  ]
+    },
+  ],
 });
