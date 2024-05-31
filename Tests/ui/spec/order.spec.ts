@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { MainPage } from '../component/global-fuction';
-import data from './data.json';
+import { LoginPage } from '../pages/login';
+import data from '../../data/data.json';
 
 test.beforeEach('test Order', async ({ page }) => {
-  const component = new MainPage(page);
-  await component.loginPage();
+  const loginPage = new LoginPage(page);
+  await loginPage.doLogin(
+    String(process.env.USERLOGIN),
+    String(process.env.PASSWORDLOGIN)
+  );
 });
 
 test('Test_10', async ({ page }) => {
