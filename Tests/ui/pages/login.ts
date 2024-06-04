@@ -10,6 +10,8 @@ export class LoginPage {
   readonly errorMessage: Locator;
   readonly iconMenu: Locator;
   readonly menuLogout: Locator;
+  readonly resetState: Locator;
+  readonly burgerCrossBtn: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,6 +21,8 @@ export class LoginPage {
     this.errorMessage = page.getByText(data['error']);
     this.iconMenu = page.locator('id=react-burger-menu-btn');
     this.menuLogout = page.locator('id=logout_sidebar_link');
+    this.resetState = page.locator('id=reset_sidebar_link');
+    this.burgerCrossBtn = page.locator('id=react-burger-cross-btn');
   }
 
   async doLogin(userName: string, password: string) {
@@ -45,5 +49,11 @@ export class LoginPage {
   async checkLogout() {
     await expect(this.page).toHaveURL('/');
     await expect(this.page).toHaveTitle(data['name_website']);
+  }
+
+  async resetStateOfPage() {
+    await this.iconMenu.click();
+    await this.resetState.click();
+    await this.burgerCrossBtn.click();
   }
 }

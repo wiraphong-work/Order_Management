@@ -1,35 +1,29 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from '../pages/login';
-import data from '../../data/data.json';
+import { ProductPage } from '../pages/product';
+import { OrderPage } from '../pages/order';
+
+let productPage;
+let orderPage;
+let loginPage;
 
 test.beforeEach('test Order', async ({ page }) => {
-  const loginPage = new LoginPage(page);
-  await loginPage.doLogin(
-    String(process.env.USERLOGIN),
-    String(process.env.PASSWORDLOGIN)
-  );
+  loginPage = new LoginPage(page);
+  productPage = new ProductPage(page);
+  orderPage = new OrderPage(page);
+
+  await loginPage.doLogin(process.env.USERLOGIN, process.env.PASSWORDLOGIN);
 });
 
-test('Test_10', async ({ page }) => {
-  await page.click('id=add-to-cart-sauce-labs-backpack');
-  await page.click('id=shopping_cart_container');
-  await page.getByRole('button', { name: 'Checkout' }).click();
-  await page.getByPlaceholder('First Name').fill('test');
-  await page.getByPlaceholder('Last Name').fill('test');
-  await page.getByPlaceholder('Zip/Postal Code').fill('10400');
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Finish' }).click();
-  await expect(page.getByText(data['order_sucess'])).toBeVisible();
+test('Test_10', async () => {
+  const dataProduct = await productPage.randomSelectProduct(1);
+  await productPage.checkNumberCart(dataProduct.numberAtCart);
+  await orderPage.CheckoutSuccess(true);
 });
 
-test('Test_11', async ({ page }) => {
-  await page.click('id=add-to-cart-sauce-labs-backpack');
-  await page.click('id=shopping_cart_container');
-  await page.getByRole('button', { name: 'Checkout' }).click();
-  await page.getByPlaceholder('First Name').fill('test');
-  await page.getByPlaceholder('Last Name').fill('test');
-  await page.getByPlaceholder('Zip/Postal Code').fill('10400');
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Cancel' }).click();
-  await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
+test('Test_11', async () => {
+  const dataProduct = await productPage.randomSelectProduct(1);
+  await productPage.checkNumberCart(dataProduct.numberAtCart);
+  await orderPage.CheckoutSuccess(false);
+  await productPage.checkNumberCart(dataProduct.numberAtCart);
 });

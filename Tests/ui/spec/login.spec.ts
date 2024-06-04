@@ -9,10 +9,7 @@ test.beforeEach('test Login', async ({ page }) => {
 });
 
 test('Test_01', async () => {
-  await loginPage.doLogin(
-    String(process.env.USERLOGIN),
-    String(process.env.PASSWORDLOGIN)
-  );
+  await loginPage.doLogin(process.env.USERLOGIN, process.env.PASSWORDLOGIN);
   await loginPage.checkLoggedIn();
 });
 

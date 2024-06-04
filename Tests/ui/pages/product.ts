@@ -69,34 +69,6 @@ export class ProductPage {
     return { countProduct, idProduct };
   }
 
-  // async randomProduct(number: number) {
-  //   let min = 0;
-  //   let max = (await this.label.count()) - 1;
-  //   let count = await number;
-
-  //   const result = await new Set();
-
-  //   while (result.size < count) {
-  //     const randomNum =
-  //       (await Math.floor(Math.random() * (max - min + 1))) + min;
-  //     result.add(randomNum);
-  //   }
-
-  //   // const text = await this.page.locator('.btn').getAttribute('data-test');
-
-  //   for (let val of await result) {
-
-  //     const idLocator = await this.page
-  //       .getByText('Add to cart')
-  //       .nth(Number(val))
-  //       .getAttribute('data-test', { timeout: 2000 });
-  //     // console.log('idLocator:', idLocator);
-
-  //     await this.page.locator(`data-test=${idLocator}`).click();
-  //   }
-  //   return await number.toString();
-  // }
-
   async randomSelectProduct(numberAtCart: any) {
     const { countProduct, idProduct } = await this.getAllProducts();
 
@@ -105,16 +77,16 @@ export class ProductPage {
     let count = await numberAtCart;
 
     const result = await new Set();
-    
+
     while (result.size < count) {
       const randomNum =
         (await Math.floor(Math.random() * (max - min + 1))) + min;
       result.add(randomNum);
     }
 
-
-
-    let selectedProduct = Array(6).fill(undefined);
+    let selectedProduct = Array(max)
+      .fill(undefined)
+      .filter((value) => value !== undefined);
     for (let val of await result) {
       selectedProduct.push(idProduct[Number(val)]);
       await this.page.locator(`data-test=${idProduct[Number(val)]}`).click();
@@ -123,27 +95,60 @@ export class ProductPage {
     return { numberAtCart, selectedProduct };
   }
 
+  // async randomSelectProduct(numberAtCart: any) {
+  //   const { countProduct, idProduct } = await this.getAllProducts();
+
+  //   let num = countProduct;
+  //   let btn_arr = idProduct;
+  //   const want = numberAtCart;
+
+  //   const result = Array.from(Array(num - want).keys()).reduce((p) => {
+  //     const select = Math.floor(Math.random() * p.length);
+  //     return p.filter((e) => !e.includes(p[select]));
+  //   }, btn_arr);
+
+  //   result.map(async (value) => {
+  //     await console.log('value :>> ', value);
+  //     await this.page.locator(`data-test=${value}`).click();
+  //     const btnStr = await this.page
+  //       .locator(`data-test=${value}`)
+  //       .textContent();
+  //     await console.log('btnStr:>> ', btnStr);
+  //     await expect(btnStr).toContainEqual('Remove');
+  //     await console.log('cart :>> ', await this.cart.textContent());
+  //     // await this.page.waitForTimeout(1000);
+  //   });
+
+  //   return result;
+  // }
+
   async checkNumberCart(numberAtCart: number) {
     await expect(this.cart).toHaveText(String(numberAtCart));
   }
 
-  async removeProduct(product: [], numRemove: any) {
+  async removeProduct(product: [], numberRemove: number) {
     await this.cart.click();
-    //เงื่อนไขลบครั้งเดียว
-    await product.map((value) => {
-      const editText = String(value).replace('add-to-cart', 'remove');
+    if (product.length > numberRemove) {
+      //select remove a Product[0]
+      const productRemoved = product.slice(0, 1)[0];
+      const editText = String(productRemoved).replace('add-to-cart', 'remove');
       this.page.locator(`data-test=${editText}`).click();
-    });
+    } else {
+      product.map((value) => {
+        //remove all Product 
+        const editText = String(value).replace('add-to-cart', 'remove');
+        this.page.locator(`data-test=${editText}`).click();
+      });
+    }
+    return numberRemove;
   }
 
   async checKNoticeHiddenCart(
-    selectProduct: number,
-    removeProduct: [],
+    numberRemove: number,
+    selectedProduct: [],
     noticHidden: boolean
   ) {
-    console.log('removeProduct:', removeProduct);
-    const resultCart = selectProduct - removeProduct.length;
-    console.log('noticHidden:', noticHidden);
+    const resultCart = selectedProduct.length - numberRemove;
     if (noticHidden) {
       await expect(this.cart).toBeHidden();
     } else {

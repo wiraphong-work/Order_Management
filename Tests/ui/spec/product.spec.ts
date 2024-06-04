@@ -9,20 +9,17 @@ test.beforeEach('test Product', async ({ page }) => {
   loginPage = new LoginPage(page);
   productPage = new ProductPage(page);
 
-  await loginPage.doLogin(
-    String(process.env.USERLOGIN),
-    String(process.env.PASSWORDLOGIN)
-  );
+  await loginPage.doLogin(process.env.USERLOGIN, process.env.PASSWORDLOGIN);
 });
 
 test('Test_04', async () => {
-  const numberProduct = await productPage.randomSelectProduct(1);
-  await productPage.checkNumberCart(numberProduct.numberAtCart);
+  const dataProduct = await productPage.randomSelectProduct(1);
+  await productPage.checkNumberCart(dataProduct.numberAtCart);
 });
 
 test('Test_05', async () => {
-  const numberProduct = await productPage.randomSelectProduct(3);
-  await productPage.checkNumberCart(numberProduct.numberAtCart);
+  const dataProduct = await productPage.randomSelectProduct(3);
+  await productPage.checkNumberCart(dataProduct.numberAtCart);
 });
 
 test('Test_06', async ({ page }) => {
@@ -36,34 +33,29 @@ test('Test_06', async ({ page }) => {
 });
 
 test('Test_07', async () => {
-  const numberProduct = await productPage.randomSelectProduct(1);
-  await productPage.checkNumberCart(numberProduct.numberAtCart);
-  await productPage.removeProduct(numberProduct.selectedProduct );
-  await productPage.checKNoticeHiddenCart(
-    numberProduct.numberAtCart,
-    numberProduct.selectedProduct,
-    true
-  );
+  const dataProduct = await productPage.randomSelectProduct(1);
+  const { numberAtCart, selectedProduct } = dataProduct;
+  await productPage.checkNumberCart(numberAtCart);
+  const numberRemove = await productPage.removeProduct(selectedProduct, 1);
+  await productPage.checKNoticeHiddenCart(numberRemove, selectedProduct, true);
 });
 
 test('Test_08', async () => {
-  const numberProduct = await productPage.randomSelectProduct(3);
-  await productPage.checkNumberCart(numberProduct.numberAtCart);
-  await productPage.removeProduct(numberProduct.selectedProduct, 1);
-  await productPage.checKNoticeHiddenCart(
-    numberProduct.numberAtCart,
-    numberProduct.selectedProduct,
-    false
-  );
+  const dataProduct = await productPage.randomSelectProduct(3);
+  const { numberAtCart, selectedProduct } = dataProduct;
+  await productPage.checkNumberCart(numberAtCart);
+  const numberRemove = await productPage.removeProduct(selectedProduct, 1);
+  await productPage.checKNoticeHiddenCart(numberRemove, selectedProduct, false);
 });
 
-test('Test_09', async ({ page }) => {
-  await page.click('id=add-to-cart-sauce-labs-backpack');
-  await page.click('id=add-to-cart-sauce-labs-bike-light');
-  await page.click('id=add-to-cart-sauce-labs-onesie');
-  await expect(page.locator('.shopping_cart_badge')).toHaveText('3');
-  await page.click('id=remove-sauce-labs-backpack');
-  await expect(page.locator('.shopping_cart_badge')).toHaveText('2');
-  await page.click('id=remove-sauce-labs-bike-light');
-  await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
+test('Test_09', async () => {
+  let numberRemove;
+  const dataProduct = await productPage.randomSelectProduct(3);
+  const { numberAtCart, selectedProduct } = dataProduct;
+  await productPage.checkNumberCart(numberAtCart);
+  numberRemove = await productPage.removeProduct(selectedProduct, 1);
+  await productPage.checkNumberCart(numberAtCart);
+  numberRemove = await productPage.removeProduct(selectedProduct, 1);
+  await productPage.checkNumberCart(numberAtCart);
+  await productPage.checKNoticeHiddenCart(numberRemove, selectedProduct, false);
 });

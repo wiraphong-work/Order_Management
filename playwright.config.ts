@@ -8,6 +8,7 @@ export default defineConfig({
   fullyParallel: true,
   retries: 2,
   workers: 1,
+
   // reporter: [
   //   [
   //     'playwright-tesults-reporter',
