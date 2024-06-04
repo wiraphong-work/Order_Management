@@ -19,10 +19,7 @@ test('Test_02', async () => {
 });
 
 test('Test_03', async () => {
-  await loginPage.doLogin(
-    String(process.env.USERLOGIN),
-    String(process.env.PASSWORDLOGIN)
-  );
+  await loginPage.doLogin(process.env.USERLOGIN, process.env.PASSWORDLOGIN);
   await loginPage.checkLoggedIn();
   await loginPage.logoutPage();
   await loginPage.checkLogout();
