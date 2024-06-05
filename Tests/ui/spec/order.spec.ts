@@ -18,12 +18,12 @@ test.beforeEach('test Order', async ({ page }) => {
 test('Test_10', async () => {
   const dataProduct = await productPage.randomSelectProduct(1);
   await productPage.checkNumberCart(dataProduct.numberAtCart);
-  await orderPage.CheckoutSuccess(true);
+  await orderPage.checkoutSuccess(true);
 });
 
 test('Test_11', async () => {
   const dataProduct = await productPage.randomSelectProduct(1);
   await productPage.checkNumberCart(dataProduct.numberAtCart);
-  await orderPage.CheckoutSuccess(false);
+  await orderPage.checkoutSuccess(false);
   await productPage.checkNumberCart(dataProduct.numberAtCart);
 });

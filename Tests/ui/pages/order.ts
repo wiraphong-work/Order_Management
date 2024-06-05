@@ -26,7 +26,7 @@ export class OrderPage {
     this.modelMessage = page.getByText(data['order_sucess']);
   }
 
-  async CheckoutSuccess(action: true) {
+  async checkoutSuccess(action: true) {
     await this.cart.click();
     await this.checkoutBtn.click();
     await this.fNameInput.fill('test');
