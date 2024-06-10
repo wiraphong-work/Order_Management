@@ -20,13 +20,16 @@ export class ProductPage {
     const description = await this.description.allTextContents();
     const price = await this.price.allTextContents();
 
-    const result = await label.map((value, index) => {
-      return {
-        label: value,
+    let result: any[] = [];
+    for (const index of label.keys()) {
+      const obj = {
+        label: label[index],
         description: description[index],
         price: price[index].replace('$', ''),
       };
-    });
+      result.push(obj);
+    }
+
     // Check if the array is sorted in descending order already returen true
     const isSorted = await result.every(
       (val, i, arr) => !i || arr[i - 1] >= val
@@ -39,13 +42,15 @@ export class ProductPage {
     const description = await this.description.allTextContents();
     const price = await this.price.allTextContents();
 
-    const result = await label.map((value, index) => {
-      return {
-        label: value,
+    let result: any[] = [];
+    for (const index of label.keys()) {
+      const obj = {
+        label: label[index],
         description: description[index],
         price: price[index].replace('$', ''),
       };
-    });
+      result.push(obj);
+    }
 
     // Check if the array is sorted in ascending order already returen true
     const isSorted = await result.every(
@@ -70,57 +75,23 @@ export class ProductPage {
   }
 
   async randomSelectProduct(numberAtCart: any) {
-    const { countProduct, idProduct } = await this.getAllProducts();
+    const { idProduct } = await this.getAllProducts();
 
-    let min = 0;
-    let max = countProduct - 1;
-    let count = await numberAtCart;
+    const want = numberAtCart;
+    const arr = Array.from(Array(idProduct.length - want).keys());
 
-    const result = await new Set();
-
-    while (result.size < count) {
-      const randomNum =
-        (await Math.floor(Math.random() * (max - min + 1))) + min;
-      result.add(randomNum);
+    for (const _ of arr) {
+      const randomNum = await Math.floor(Math.random() * idProduct.length);
+      await idProduct.splice(randomNum, 1);
     }
 
-    let selectedProduct = Array(max)
-      .fill(undefined)
-      .filter((value) => value !== undefined);
-    for (let val of await result) {
-      selectedProduct.push(idProduct[Number(val)]);
-      await this.page.locator(`data-test=${idProduct[Number(val)]}`).click();
+    for (let index = 0; index < idProduct.length; index++) {
+      await this.page.locator(`data-test=${idProduct[index]}`).click();
     }
 
+    const selectedProduct = idProduct;
     return { numberAtCart, selectedProduct };
   }
-
-  // async randomSelectProduct(numberAtCart: any) {
-  //   const { countProduct, idProduct } = await this.getAllProducts();
-
-  //   let num = countProduct;
-  //   let btn_arr = idProduct;
-  //   const want = numberAtCart;
-
-  //   const result = Array.from(Array(num - want).keys()).reduce((p) => {
-  //     const select = Math.floor(Math.random() * p.length);
-  //     return p.filter((e) => !e.includes(p[select]));
-  //   }, btn_arr);
-
-  //   result.map(async (value) => {
-  //     await console.log('value :>> ', value);
-  //     await this.page.locator(`data-test=${value}`).click();
-  //     const btnStr = await this.page
-  //       .locator(`data-test=${value}`)
-  //       .textContent();
-  //     await console.log('btnStr:>> ', btnStr);
-  //     await expect(btnStr).toContainEqual('Remove');
-  //     await console.log('cart :>> ', await this.cart.textContent());
-  //     // await this.page.waitForTimeout(1000);
-  //   });
-
-  //   return result;
-  // }
 
   async checkNumberCart(numberAtCart: number) {
     await expect(this.cart).toHaveText(String(numberAtCart));
@@ -134,11 +105,13 @@ export class ProductPage {
       const editText = String(productRemoved).replace('add-to-cart', 'remove');
       this.page.locator(`data-test=${editText}`).click();
     } else {
-      product.map((value) => {
-        //remove all Product 
-        const editText = String(value).replace('add-to-cart', 'remove');
+      for (let index = 0; index < product.length; index++) {
+        const editText = String(product[index]).replace(
+          'add-to-cart',
+          'remove'
+        );
         this.page.locator(`data-test=${editText}`).click();
-      });
+      }
     }
     return numberRemove;
   }
